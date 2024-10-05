@@ -293,7 +293,7 @@ class SettingsRepository {
   bool _darkMode = false;
   String _fontSize = 'Medium';
   String _language = 'English';
-  bool _privacyMode = false;
+  bool _privacyMode = true;
   String _distanceUnit = 'Kilometers';
 
   bool getDarkMode() => _darkMode;
@@ -353,8 +353,11 @@ class _MainScreenState extends State<MainScreen> {
         tripRepository: widget.tripRepository,
         favoritesRepository: widget.favoritesRepository,
       ),
-      ExploreTripsScreen(),
-      ExploreDestinationsScreen(),
+      ExploreTripsScreen(tripRepository: widget.tripRepository),
+      ExploreDestinationsScreen(
+        destinationRepository: widget.destinationRepository,
+        favoritesRepository: widget.favoritesRepository,
+      ),
       FavoritesScreen(
         favoritesRepository: widget.favoritesRepository,
       ),
@@ -470,6 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Carousel(
+            favoritesRepository: widget.favoritesRepository,
             trips: trips,
             secretTip: secretTip,
             favoriteDestination: favoriteDestinations.isNotEmpty
@@ -542,15 +546,18 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class Carousel extends StatelessWidget {
+  final FavoritesRepository favoritesRepository;
   final List<Trip> trips;
   final Trip? secretTip;
   final Destination? favoriteDestination;
 
-  const Carousel(
-      {super.key,
-      required this.trips,
-      this.secretTip,
-      this.favoriteDestination});
+  const Carousel({
+    super.key,
+    required this.favoritesRepository,
+    required this.trips,
+    this.secretTip,
+    this.favoriteDestination,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -563,6 +570,7 @@ class Carousel extends StatelessWidget {
             CarouselItem(trip: secretTip!, label: 'Secret Tip!'),
           if (favoriteDestination != null)
             CarouselItem(
+                favoritesRepository: favoritesRepository,
                 destination: favoriteDestination!,
                 label: 'From Your Favorites'),
           ...trips.map((trip) => CarouselItem(trip: trip)),
@@ -573,6 +581,7 @@ class Carousel extends StatelessWidget {
 }
 
 class CarouselItem extends StatelessWidget {
+  final FavoritesRepository? favoritesRepository;
   final Trip? trip;
   final Destination? destination;
   final String? label;
@@ -582,6 +591,7 @@ class CarouselItem extends StatelessWidget {
     this.trip,
     this.destination,
     this.label,
+    this.favoritesRepository,
   });
 
   @override
@@ -594,7 +604,10 @@ class CarouselItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => trip == null
-            ? DestinationDetailsScreen(destination: destination!)
+            ? DestinationDetailsScreen(
+                destination: destination!,
+                favoritesRepository: favoritesRepository!,
+              )
             : TripDetailsScreen(trip: trip!),
       )),
       child: Stack(
@@ -653,9 +666,14 @@ class CarouselItem extends StatelessWidget {
 }
 
 class ExploreDestinationsScreen extends StatelessWidget {
-  final DestinationRepository destinationRepository = DestinationRepository();
+  final DestinationRepository destinationRepository;
+  final FavoritesRepository favoritesRepository;
 
-  ExploreDestinationsScreen({super.key});
+  const ExploreDestinationsScreen({
+    super.key,
+    required this.destinationRepository,
+    required this.favoritesRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -671,8 +689,11 @@ class ExploreDestinationsScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      DestinationDetailsScreen(destination: destination)),
+                builder: (context) => DestinationDetailsScreen(
+                  destination: destination,
+                  favoritesRepository: favoritesRepository,
+                ),
+              ),
             );
           },
         );
@@ -954,7 +975,7 @@ class FavoritesDetailsScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   favoritesRepository.removeFavorite(destination);
-                  Navigator.pop(context); // Go back to previous screen
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: const Text(
@@ -972,8 +993,13 @@ class FavoritesDetailsScreen extends StatelessWidget {
 
 class DestinationDetailsScreen extends StatelessWidget {
   final Destination destination;
+  final FavoritesRepository favoritesRepository;
 
-  const DestinationDetailsScreen({super.key, required this.destination});
+  const DestinationDetailsScreen({
+    super.key,
+    required this.destination,
+    required this.favoritesRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -990,8 +1016,10 @@ class DestinationDetailsScreen extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.asset("assets/images/${destination.imageUrl}",
-                    fit: BoxFit.cover),
+                child: Image.asset(
+                  "assets/images/${destination.imageUrl}",
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(height: 16),
               Text('Country: ${destination.country}',
@@ -1003,16 +1031,33 @@ class DestinationDetailsScreen extends StatelessWidget {
               Text(destination.description,
                   style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.teal[600]),
-                child: const Text(
-                  'Go Back',
-                  style: TextStyle(color: Colors.white),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal[600]),
+                    child: const Text(
+                      'Go Back',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      favoritesRepository.addFavorite(destination);
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal[600]),
+                    child: const Text(
+                      'Add to favorites',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -1070,8 +1115,11 @@ class DestinationCard extends StatelessWidget {
   final Destination destination;
   final VoidCallback onTap;
 
-  const DestinationCard(
-      {super.key, required this.destination, required this.onTap});
+  const DestinationCard({
+    super.key,
+    required this.destination,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1144,7 +1192,7 @@ class FavoriteCard extends StatelessWidget {
                     favoritesRepository: favoritesRepository,
                   ),
                 ),
-              ).then((_) => onRemove()); // Refresh list when navigating back
+              ).then((_) => onRemove()); // Liste updaten bei Zurücknavigation
             },
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -1178,7 +1226,7 @@ class FavoriteCard extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 favoritesRepository.removeFavorite(destination);
-                onRemove(); // Callback to refresh the list
+                onRemove(); // Liste updaten bei Zurücknavigation
               },
               child: Container(
                 decoration: const BoxDecoration(
@@ -1205,9 +1253,9 @@ class FavoriteCard extends StatelessWidget {
 }
 
 class ExploreTripsScreen extends StatelessWidget {
-  final TripRepository tripRepository = TripRepository();
+  final TripRepository tripRepository;
 
-  ExploreTripsScreen({super.key});
+  const ExploreTripsScreen({super.key, required this.tripRepository});
 
   @override
   Widget build(BuildContext context) {
