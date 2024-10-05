@@ -55,52 +55,45 @@ class TripRepository {
       dateRange: '10-15 Oct 2024',
       itinerary:
           'Visit Eiffel Tower, Louvre Museum, and stroll through Montmartre.',
-      imageUrl:
-          'https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg',
+      imageUrl: 'paris.jpeg',
     ),
     Trip(
       destination: 'Tokyo',
       dateRange: '20-25 Nov 2024',
       itinerary: 'See Shibuya Crossing, visit Senso-ji, and explore Harajuku.',
-      imageUrl:
-          'https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg',
+      imageUrl: 'tokyo.jpeg',
     ),
     Trip(
       destination: 'New York',
       dateRange: '5-10 Dec 2024',
       itinerary: 'Visit Central Park, Statue of Liberty, and Times Square.',
-      imageUrl:
-          'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg',
+      imageUrl: 'new_york.jpeg',
     ),
     Trip(
       destination: 'Rome',
       dateRange: '15-20 Jan 2025',
       itinerary: 'Tour the Colosseum, Roman Forum, and Vatican City.',
-      imageUrl:
-          'https://images.pexels.com/photos/356854/pexels-photo-356854.jpeg',
+      imageUrl: 'rome.jpeg',
     ),
     Trip(
       destination: 'Sydney',
       dateRange: '25-30 Feb 2025',
       itinerary:
           'See the Opera House, climb the Harbour Bridge, and relax at Bondi Beach.',
-      imageUrl:
-          'https://images.pexels.com/photos/2193300/pexels-photo-2193300.jpeg',
+      imageUrl: 'sydney.jpeg',
     ),
     Trip(
       destination: 'Rio de Janeiro',
       dateRange: '10-15 Mar 2025',
       itinerary:
           'Visit Christ the Redeemer, Sugarloaf Mountain, and Copacabana Beach.',
-      imageUrl:
-          'https://images.pexels.com/photos/756781/pexels-photo-756781.jpeg',
+      imageUrl: 'rio_de_janeiro.jpeg',
     ),
     Trip(
       destination: 'Cape Town',
       dateRange: '20-25 Apr 2025',
       itinerary: 'Explore Table Mountain, V&A Waterfront, and Robben Island.',
-      imageUrl:
-          'https://images.pexels.com/photos/167473/pexels-photo-167473.jpeg',
+      imageUrl: 'cape_town.jpeg',
     ),
   ];
 
@@ -116,56 +109,49 @@ class DestinationRepository {
       country: 'France',
       description:
           'The City of Lights, famous for its culture and architecture.',
-      imageUrl:
-          'https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg',
+      imageUrl: 'paris.jpeg',
     ),
     Destination(
       name: 'Tokyo',
       country: 'Japan',
       description:
           'A city blending tradition with modern technology, and full of vibrant districts.',
-      imageUrl:
-          'https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg',
+      imageUrl: 'tokyo.jpeg',
     ),
     Destination(
       name: 'New York',
       country: 'USA',
       description:
           'The city that never sleeps, known for its iconic skyline and landmarks.',
-      imageUrl:
-          'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg',
+      imageUrl: 'new_york.jpeg',
     ),
     Destination(
       name: 'Rome',
       country: 'Italy',
       description:
           'A city steeped in history, with ancient ruins and Renaissance art.',
-      imageUrl:
-          'https://images.pexels.com/photos/356854/pexels-photo-356854.jpeg',
+      imageUrl: 'rome.jpeg',
     ),
     Destination(
       name: 'Sydney',
       country: 'Australia',
       description:
           'Known for its Sydney Opera House, Harbour Bridge, and beautiful beaches.',
-      imageUrl:
-          'https://images.pexels.com/photos/2193300/pexels-photo-2193300.jpeg',
+      imageUrl: 'sydney.jpeg',
     ),
     Destination(
       name: 'Rio de Janeiro',
       country: 'Brazil',
       description:
           'Famous for its Carnival, Christ the Redeemer, and breathtaking beaches.',
-      imageUrl:
-          'https://images.pexels.com/photos/756781/pexels-photo-756781.jpeg',
+      imageUrl: 'rio_de_janeiro.jpeg',
     ),
     Destination(
       name: 'Cape Town',
       country: 'South Africa',
       description:
           'A port city beneath Table Mountain, known for its stunning landscapes.',
-      imageUrl:
-          'https://images.pexels.com/photos/167473/pexels-photo-167473.jpeg',
+      imageUrl: 'cape_town.jpeg',
     ),
   ];
 
@@ -185,24 +171,21 @@ class FavoritesRepository {
       country: 'USA',
       description:
           'The city that never sleeps, known for its iconic skyline and landmarks.',
-      imageUrl:
-          'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg',
+      imageUrl: 'new_york.jpeg',
     ),
     Destination(
       name: 'Rome',
       country: 'Italy',
       description:
           'A city steeped in history, with ancient ruins and Renaissance art.',
-      imageUrl:
-          'https://images.pexels.com/photos/356854/pexels-photo-356854.jpeg',
+      imageUrl: 'rome.jpeg',
     ),
     Destination(
       name: 'Cape Town',
       country: 'South Africa',
       description:
           'A port city beneath Table Mountain, known for its stunning landscapes.',
-      imageUrl:
-          'https://images.pexels.com/photos/167473/pexels-photo-167473.jpeg',
+      imageUrl: 'cape_town.jpeg',
     ),
   ];
 
@@ -446,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text(trip.destination),
                 subtitle: Text(trip.dateRange),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(trip.imageUrl),
+                  backgroundImage: AssetImage("assets/images/${trip.imageUrl}"),
                 ),
                 onTap: () {
                   Navigator.push(
@@ -521,7 +504,7 @@ class CarouselItem extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
               image: DecorationImage(
-                image: NetworkImage(imageUrl),
+                image: AssetImage("assets/images/$imageUrl"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -763,7 +746,8 @@ class TripDetailsScreen extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(trip.imageUrl, fit: BoxFit.cover),
+                child: Image.asset("assets/images/${trip.imageUrl}",
+                    fit: BoxFit.cover),
               ),
               const SizedBox(height: 16),
               Text('Dates: ${trip.dateRange}',
@@ -817,7 +801,8 @@ class FavoritesDetailsScreen extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(destination.imageUrl, fit: BoxFit.cover),
+                child: Image.asset("assets/images/${destination.imageUrl}",
+                    fit: BoxFit.cover),
               ),
               const SizedBox(height: 20),
               Center(
@@ -904,7 +889,8 @@ class DestinationDetailsScreen extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(destination.imageUrl, fit: BoxFit.cover),
+                child: Image.asset("assets/images/${destination.imageUrl}",
+                    fit: BoxFit.cover),
               ),
               const SizedBox(height: 16),
               Text('Country: ${destination.country}',
@@ -956,7 +942,7 @@ class TripCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(trip.imageUrl,
+                child: Image.asset("assets/images/${trip.imageUrl}",
                     width: 80, height: 80, fit: BoxFit.cover),
               ),
               const SizedBox(width: 16),
@@ -1003,7 +989,7 @@ class DestinationCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(destination.imageUrl,
+                child: Image.asset("assets/images/${destination.imageUrl}",
                     width: 80, height: 80, fit: BoxFit.cover),
               ),
               const SizedBox(width: 16),
@@ -1065,7 +1051,7 @@ class FavoriteCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(destination.imageUrl,
+                    child: Image.asset("assets/images/${destination.imageUrl}",
                         width: 80, height: 80, fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 16),
