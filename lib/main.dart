@@ -460,6 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final trips = widget.tripRepository.getAllTrips();
     final favoriteDestinations = widget.favoritesRepository.getFavorites();
     final secretTip = trips.isNotEmpty ? trips[0] : null;
+    final destinations = widget.destinationRepository.getAllDestinations();
 
     return SingleChildScrollView(
       child: Column(
@@ -491,17 +492,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: trips.length > 3 ? 3 : trips.length,
+            itemCount: destinations.length > 3 ? 3 : destinations.length,
             itemBuilder: (context, index) {
-              final trip = trips[index];
+              final destination = destinations[index];
 
-              return TripCard(
-                trip: trip,
+              return PopularDestinationCard(
+                destination: destination,
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TripDetailsScreen(trip: trip)),
+                      builder: (context) => DestinationDetailsScreen(
+                        favoritesRepository: widget.favoritesRepository,
+                        destination: destination,
+                      ),
+                    ),
                   );
                 },
               );
@@ -1067,11 +1072,15 @@ class DestinationDetailsScreen extends StatelessWidget {
   }
 }
 
-class TripCard extends StatelessWidget {
-  final Trip trip;
+class PopularDestinationCard extends StatelessWidget {
+  final Destination destination;
   final VoidCallback onTap;
 
-  const TripCard({super.key, required this.trip, required this.onTap});
+  const PopularDestinationCard({
+    super.key,
+    required this.destination,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1088,20 +1097,32 @@ class TripCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset("assets/images/${trip.destination.imageUrl}",
+                child: Image.asset("assets/images/${destination.imageUrl}",
                     width: 80, height: 80, fit: BoxFit.cover),
               ),
               const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(trip.destination.name,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      destination.name,
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text(trip.dateRange,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700])),
-                ],
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      destination.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
