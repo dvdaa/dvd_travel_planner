@@ -1,10 +1,10 @@
 name: aa_travel_planner
-description: "A new Flutter project."
+description: "Eine mittelgroße App, die das Finden von Zielen und Reisen simuliert."
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.2.1
 
 dependencies:
   flutter:
