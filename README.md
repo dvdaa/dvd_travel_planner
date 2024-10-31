@@ -4,8 +4,6 @@ Eine mittelgroße App, die das Finden von Zielen und Reisen simuliert.
 
 Neben dem Finden von Reisen und dem Erkunden von Zielen hat sie Funktionen wie Favoriten und Einstellungen.
 
-
-
 ## Idee
 
 Mithilfe der App kann man sehen, wie schwer es ist, eine App zu verstehen, die schlecht oder gar nicht organisiert ist.
@@ -25,7 +23,6 @@ Repositories werden genutzt, um die Daten der App zu speichern, zum Beispiel wel
 ## Die App starten
 
 Möglicherweise musst du `flutter pub get` im Terminal ausführen oder `Flutter: Get Packages` in Visual Studio Code starten.
-
 
 ## Screenshots
 
