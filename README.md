@@ -31,4 +31,4 @@ Möglicherweise musst du `flutter pub get` im Terminal ausführen oder `Flutter:
 
 Home Screen                       |  Favorites Screen          |  Settings Screen
 :--------------------------------:|:-------------------------:|:-------------------------:
-![](screenshots/home.png){width=1}  |  ![](screenshots/favorite.png){width=1} |  ![](screenshots/settings.png){width=1}
+![](screenshots/home.png){width=150}  |  ![](screenshots/favorite.png){width=150} |  ![](screenshots/settings.png){width=150}
